@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Создание статьи</title>
+  </head>
+  <body>
+    <div class="main-container">
+      <div class="form">
+        <label for="title">Заголовок статьи</label>
+        <input type="text" name="title" />
+        <label for="content">Содержание статьи</label>
+        <textarea name="content"></textarea>
+        <label for="categoryId">ID категории</label>
+        <input type="number" name="categoryId" />
+        <label for="articleStatus">Тип статьи</label>
+        <select name="articleStatus">
+          <option value="PUBLIC" selected>Публичная</option>
+          <option value="HIDDEN">Скрытая</option>
+        </select>
+        <button id="postArticleButton">Отправить</button>
+      </div>
+    </div>
+  </body>
+  <script src="scripts/post-article.js"></script>
+</html>

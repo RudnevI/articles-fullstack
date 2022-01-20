@@ -1,0 +1,55 @@
+.input-container {
+  margin-top: 10vh;
+  display: flex;
+  flex-direction: row;
+  column-gap: 3vmax;
+  justify-content: center;
+}
+
+#deleteArticleButton {
+  background-color: red;
+  color: white;
+  padding: 1vmin;
+  border-radius: 20%;
+  border-color: red;
+}
+
+.main-container {
+  margin-top: 10vh;
+
+  width: 60%;
+  margin-right: auto;
+  margin-left: auto;
+
+  min-height: 100vh;
+}
+
+.title {
+  font-size: 3vmax;
+  min-height: 5vh;
+}
+
+.content {
+  font-size: 1vmax;
+  min-height: 5vh;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1vmin;
+}
+
+textarea {
+  min-height: 10vmin;
+}
+
+#postArticleButton {
+  width: 20%;
+}
+
+.list-element {
+  display: flex;
+  border-bottom: 1px solid black;
+  justify-content: space-around;
+}
