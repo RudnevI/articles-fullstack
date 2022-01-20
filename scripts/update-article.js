@@ -23,3 +23,28 @@ const getArticleById = (id) => {
 getArticleButton.onclick = function () {
   getArticleById(document.getElementById("articleId").value);
 };
+
+const updateArticleById = async (id) => {
+  await fetch(`${rootUrl}/articles/${id}`, {
+    method: "PUT",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title: document.getElementsByName("title")[0].value,
+      content: document.getElementsByName("content")[0].value,
+      category: document.getElementsByName("categoryId")[0].value,
+      article_status: document.getElementsByName("articleStatus")[0].value
+    })
+  })}
+
+
+  const updateArticleButton = document.getElementById("updateArticleButton");
+
+  updateArticleButton.onclick = function() {
+    updateArticleById(document.getElementById("articleId").value)
+  }
+
+
+  

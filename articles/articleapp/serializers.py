@@ -5,13 +5,13 @@ from rest_framework import serializers
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['parent_id', 'name']
+        fields = ['id', 'parent_id', 'name']
 
 
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ['title', 'content', 'category', 'article_status']
+        fields = ['id', 'title', 'content', 'category', 'article_status']
         depth = 1
 
 
@@ -36,3 +36,4 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = ['user_name', 'content', 'article']
         depth = 1
+

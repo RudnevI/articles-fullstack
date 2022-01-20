@@ -53,3 +53,11 @@ textarea {
   border-bottom: 1px solid black;
   justify-content: space-around;
 }
+
+.error-container {
+  display: flex;
+  justify-content: center;
+  color: red;
+  width: 60%;
+  margin: auto;
+}

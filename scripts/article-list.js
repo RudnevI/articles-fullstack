@@ -13,16 +13,20 @@ const getArticles = async () => {
       fetchedData.forEach((element) => {
         let listElement = document.createElement("div");
         listElement.classList.add("list-element");
+
+        let idDiv = document.createElement("div");
         let titleDiv = document.createElement("div");
         let contentDiv = document.createElement("div");
         let categoryIdDiv = document.createElement("div");
         let articleStatusDiv = document.createElement("div");
-
+        
+        idDiv.innerHTML = element.id;
         titleDiv.innerHTML = element.title;
         contentDiv.innerHTML = element.content;
-        categoryIdDiv.innerHTML = element.category.id;
+        categoryIdDiv.innerHTML = element.category.name;
         articleStatusDiv.innerHTML = element.article_status;
-        [titleDiv, contentDiv, categoryIdDiv, articleStatusDiv].forEach((div) =>
+
+        [idDiv, titleDiv, contentDiv, categoryIdDiv, articleStatusDiv].forEach((div) =>
           listElement.appendChild(div)
         );
         document

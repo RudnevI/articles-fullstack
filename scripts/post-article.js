@@ -11,7 +11,7 @@ const postArticle = async () => {
     body: JSON.stringify({
       title: document.getElementsByName("title")[0].value,
       content: document.getElementsByName("content")[0].value,
-      category: document.getElementsByName("categoryId")[0].value,
+      category: document.getElementsByName("category")[0].value,
       article_status: document.getElementsByName("articleStatus")[0].value,
     }),
   });
@@ -19,3 +19,31 @@ const postArticle = async () => {
 };
 
 postArticleButton.onclick = postArticle;
+
+
+let fetchedCategories;
+const getAllCategories = async() => {
+  await fetch(`${rootUrl}/categories/`)
+  .then(response => response.json())
+  .then(data => {
+    fetchedCategories = data;
+      console.log(data)
+  })
+}
+
+
+
+
+const categoryDropdown = document.getElementsByName('category')[0];
+
+const fillCategoryDropdown = async() => {
+  await getAllCategories();
+  fetchedCategories.forEach(category => {
+    let option = document.createElement('option');
+    option.value = category.id;
+    option.innerHTML = category.name;
+    categoryDropdown.appendChild(option);
+  })
+}
+
+fillCategoryDropdown();
