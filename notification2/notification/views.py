@@ -5,8 +5,8 @@ from rest_framework import permissions
 from rest_framework.decorators import permission_classes
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from notification.models import Notification, Template, SendMethod
-from notification.serializers import NotificationSerializer, TemplateSerializer, SendMethodSerializer
+from .models import Notification, Template, SendMethod
+from .serializers import NotificationSerializer, TemplateSerializer, SendMethodSerializer
 from django.forms.models import model_to_dict
 from django.http import JsonResponse,HttpResponse
 from django.shortcuts import get_object_or_404
@@ -49,7 +49,7 @@ class NotificationView(APIView):
         elif notification.sendMethodID.id == 2:
             # https://telepot.readthedocs.io/en/latest/
             bot = telepot.Bot('5004111173:AAGrkTPki8mSDRQUpNgU30WlmSCA8bw_dd8')
-            bot.sendMessage(861921150, text)#id key from chat https://api.telegram.org/bot5004111173:AAGrkTPki8mSDRQUpNgU30WlmSCA8bw_dd8/getUpdates
+            bot.sendMessage(1029622829, text)#id key from chat https://api.telegram.org/bot5004111173:AAGrkTPki8mSDRQUpNgU30WlmSCA8bw_dd8/getUpdates
             # telegram_send.send(messages=["Wow that was easy!"])
 
         notification.save()

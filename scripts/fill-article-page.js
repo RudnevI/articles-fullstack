@@ -41,13 +41,71 @@ getArticleButton.onclick = function () {
 
 const deleteArticleButton = document.getElementById("deleteArticleButton");
 
-deleteArticleButton.onclick = () => {
-  let rawResponse = fetch(
-    `${rootUrl}/articles/${document.getElementById("articleId").value}`,
-    {
-      method: "DELETE",
-    }
-  );
 
-  console.log(rawResponse);
+const notificationServiceRootUrl = "http://127.0.0.1:8002";
+
+
+let templateId;
+
+
+const notifyOfDeletion = (template_id) => {
+  fetch(`${notificationServiceRootUrl}/api/notifications/`, {
+   method: "POST",
+   headers: {
+     'Accept': 'application/json',
+     'Content-Type': 'application/json'
+   },
+   body: JSON.stringify({
+     notification: {
+       params: {
+         PARAMS1: "abdulla123123123123"
+       },
+       sendMethodID_id: 2,
+       templateID_id: template_id
+
+     }
+   })
+ })
+}
+
+const createNotificationTemplate = () => {
+   fetch(`${notificationServiceRootUrl}/api/templates`, {
+    method: "POST",
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+       template: {
+        name: "Уведомление об удалении статьи",
+        text: `Статья под названием ${fetchedData.title} была удалена`
+       }
+    })
+  })
+  .then(response => response.json())
+  .then(data => {
+    templateId = data.id;
+    console.log(templateId);
+    notifyOfDeletion(data.id)
+    
+  })
+}
+
+
+
+
+
+
+
+deleteArticleButton.onclick = () => {
+  // let rawResponse = await fetch(
+  //   `${rootUrl}/articles/${document.getElementById("articleId").value}`,
+  //   {
+  //     method: "DELETE",
+  //   }
+  // );
+    createNotificationTemplate();
+  
 };
+
+
