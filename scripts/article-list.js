@@ -19,16 +19,20 @@ const getArticles = async () => {
         let contentDiv = document.createElement("div");
         let categoryIdDiv = document.createElement("div");
         let articleStatusDiv = document.createElement("div");
-        
+
         idDiv.innerHTML = element.id;
         titleDiv.innerHTML = element.title;
         contentDiv.innerHTML = element.content;
         categoryIdDiv.innerHTML = element.category.name;
         articleStatusDiv.innerHTML = element.article_status;
 
-        [idDiv, titleDiv, contentDiv, categoryIdDiv, articleStatusDiv].forEach((div) =>
-          listElement.appendChild(div)
-        );
+        [
+          idDiv,
+          titleDiv,
+          contentDiv,
+          categoryIdDiv,
+          articleStatusDiv,
+        ].forEach((div) => listElement.appendChild(div));
         document
           .getElementsByClassName("main-container")[0]
           .appendChild(listElement);

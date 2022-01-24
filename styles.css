@@ -61,3 +61,7 @@ textarea {
   width: 60%;
   margin: auto;
 }
+
+.main-container > .table {
+  width: 80% !important;
+}
