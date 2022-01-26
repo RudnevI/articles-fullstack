@@ -16,6 +16,8 @@
       crossorigin="anonymous"
     ></script>
 
+    <script src="https://use.fontawesome.com/bde6c5313f.js"></script>
+
     <title>Тэги</title>
     <div class="main-container">
       <div class="row">
@@ -40,24 +42,74 @@
     const rootUrl = "http://127.0.0.1:8001";
     let tags;
     const getAllTags = async () => {
-      await fetch(`${rootUrl}/tags/`)
+      fetch(`${rootUrl}/tags/`)
         .then((response) => response.json())
-        .then((data) => (tags = data))
-        .catch((err) => console.log(err));
+        .then((data) => {
+          tags = data;
+          fillTagTable();
+        });
     };
 
-    const fillTagTable = async () => {
-      await getAllTags();
-      let table = document.querySelector("table");
+    const fillTagTable = () => {
+      let table = document.querySelector("tbody");
+      let buff;
+
       tags.forEach((element) => {
-        let tdId, tdName;
-        [tdId, tdName].forEach((td) => (td = document.createElement("td")));
+        let tdId,
+          tdName,
+          deleteButtonContainer,
+          deleteButton,
+          editButtonContainer,
+          editButton;
+
+        tdId = document.createElement("td");
+        tdName = document.createElement("td");
+        deleteButtonContainer = document.createElement("td");
+        deleteButton = document.createElement("button");
+
+        editButtonContainer = document.createElement("td");
+
+        editButton = document.createElement("button");
+        editButton.classList.add("btn", "btn-success");
+        editButton.innerHTML = `<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    `;
+        editButton.title = "Редактировать";
+        editButton.id = element.id;
+        deleteButtonContainer.appendChild(editButton);
+
+        deleteButton.classList.add("btn", "btn-danger");
+        deleteButton.title = "Удалить";
+        deleteButton.innerHTML = `<i class="fa fa-trash" aria-hidden="true"></i>`;
+        editButton.style.marginRight = "1vw";
+
+        deleteButton.id = element.id;
+        deleteButtonContainer.appendChild(deleteButton);
+
+        deleteButton.addEventListener("click", function () {
+          fetch(`${rootUrl}/tags/${this.id}`, { method: "DELETE" }).then(
+            (response) => {
+              if (response.ok) {
+                this.parentElement.parentElement.remove();
+              }
+            }
+          );
+        });
+
+        editButton.addEventListener("click", function () {
+          location.replace(`./update-tag.html?id=${this.id}`);
+        });
+
         let tr = document.createElement("tr");
-        tdId.innerHtml = tdId.id;
-        tdName.innerHtml = tdName.tag_name;
+        tdId.innerHTML = element.id;
+        tdName.innerHTML = element.tag_name;
+        [tdId, tdName, deleteButtonContainer, editButtonContainer].forEach(
+          (td) => tr.appendChild(td)
+        );
+        console.log(tdId.innerHTML, tdName.innerHTML);
+        table.appendChild(tr);
       });
     };
 
-    fillTagTable();
+    getAllTags();
   </script>
 </html>

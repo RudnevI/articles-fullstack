@@ -16,9 +16,11 @@ class ArticleSerializer(serializers.ModelSerializer):
 
 
 class TagSerializer(serializers.ModelSerializer):
+    article_id = serializers.SlugRelatedField(many=True, slug_field="id", queryset=Article.objects.all())
+
     class Meta:
         model = Tag
-        fields = ['name', 'article']
+        fields = ['id', 'tag_name', 'article_id']
         depth = 1
 
 
@@ -34,6 +36,5 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        fields = ['user_name', 'content', 'article']
+        fields = ['id', 'user_name', 'content', 'article']
         depth = 1
-

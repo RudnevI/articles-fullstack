@@ -15,14 +15,15 @@
         <label for="content">Содержание статьи</label>
         <textarea name="content"></textarea>
         <label for="category">Категория</label>
-        <select name="category">
-          
-        </select>
+        <select name="category"></select>
         <label for="articleStatus">Тип статьи</label>
         <select name="articleStatus">
           <option value="PUBLIC" selected>Публичная</option>
           <option value="HIDDEN">Скрытая</option>
         </select>
+        <label for="articleTag"> Тэг </label>
+        <input type="text" id="articleTag" name="articleTag" />
+        <button id="addTagButton">+Тэг</button>
         <button id="postArticleButton">Отправить</button>
       </div>
     </div>

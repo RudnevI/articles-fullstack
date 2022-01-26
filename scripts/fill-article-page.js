@@ -7,7 +7,16 @@ let fetchedData;
 const errorContainer = document.getElementsByClassName("error-container")[0];
 
 let errorText;
-
+let tags;
+const getArticleTags = () => {
+  fetch(`${rootUrl}/tags/`)
+    .then((response) => response.json())
+    .then((data) => {
+      tags = Array.from(data).filter(
+        (el) => el.id === document.querySelector("#articleId").value
+      );
+    });
+};
 const getArticleById = (id) => {
   fetch(`${rootUrl}/articles/${id}`)
     .then((response) => {
@@ -30,6 +39,8 @@ const getArticleById = (id) => {
 
 const fillErrorContainer = (err) => {};
 
+let commentIds = [];
+
 getArticleButton.onclick = function () {
   getArticleById(document.getElementById("articleId").value);
   fetch(
@@ -43,10 +54,31 @@ getArticleButton.onclick = function () {
       data.forEach((element) => {
         let commentDiv = document.createElement("div");
         commentDiv.innerHTML = element.content;
+        commentDiv.classList.add("comment");
         commentSection.appendChild(commentDiv);
+        let deletionButton = document.createElement("button");
+        deletionButton.style.backgroundColor = "red";
+        deletionButton.style.color = "white";
+        deletionButton.innerHTML = "Удалить комментарий";
+        deletionButton.setAttribute("name", "deleteCommentButton");
+        deletionButton.id = element.id;
+        console.log(element.id);
+        deletionButton.addEventListener("click", function () {
+          fetch(`${rootUrl}/comments/${this.id}`, { method: "DELETE" }).then(
+            (response) => {
+              if (response.ok) {
+                this.innerHTML = "удален";
+                this.style.backgroundColor = "#d5d5d5";
+              }
+            }
+          );
+        });
+        commentSection.appendChild(deletionButton);
       });
     });
 };
+
+console.log(commentIds);
 
 const deleteArticleButton = document.getElementById("deleteArticleButton");
 
@@ -104,3 +136,22 @@ deleteArticleButton.onclick = () => {
   // );
   createNotificationTemplate();
 };
+
+document.querySelector(".send-comment-button").addEventListener("click", () => {
+  fetch(`${rootUrl}/articles/comments/`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content: document.querySelector(".comment-field").value,
+      article: document.querySelector("#articleId").value,
+      user_name: document.querySelector("#userName").value,
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    });
+});

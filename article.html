@@ -6,6 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Статья</title>
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .comment-field-block {
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
   </head>
   <body>
     <div class="input-container">
@@ -21,6 +30,12 @@
       <div class="title"></div>
       <div class="content"></div>
       <div class="comment-section"></div>
+    </div>
+
+    <div class="comment-field-block">
+      <input id="userName" type="text" />
+      <textarea class="comment-field"></textarea>
+      <button class="send-comment-button">Отправить комментарий</button>
     </div>
   </body>
   <script src="scripts/fill-article-page.js"></script>

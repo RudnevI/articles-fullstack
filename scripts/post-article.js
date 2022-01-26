@@ -20,30 +20,39 @@ const postArticle = async () => {
 
 postArticleButton.onclick = postArticle;
 
-
 let fetchedCategories;
-const getAllCategories = async() => {
+const getAllCategories = async () => {
   await fetch(`${rootUrl}/categories/`)
-  .then(response => response.json())
-  .then(data => {
-    fetchedCategories = data;
-      console.log(data)
-  })
-}
+    .then((response) => response.json())
+    .then((data) => {
+      fetchedCategories = data;
+      console.log(data);
+    });
+};
 
+const categoryDropdown = document.getElementsByName("category")[0];
 
-
-
-const categoryDropdown = document.getElementsByName('category')[0];
-
-const fillCategoryDropdown = async() => {
+const fillCategoryDropdown = async () => {
   await getAllCategories();
-  fetchedCategories.forEach(category => {
-    let option = document.createElement('option');
+  fetchedCategories.forEach((category) => {
+    let option = document.createElement("option");
     option.value = category.id;
     option.innerHTML = category.name;
     categoryDropdown.appendChild(option);
-  })
-}
+  });
+};
 
 fillCategoryDropdown();
+
+document.querySelector("#addTagButton").addEventListener("click", () => {
+  let tagFieldToInsert = document.createElement("input");
+  tagFieldToInsert.setAttribute("type", "text");
+  tagFieldToInsert.setAttribute("name", "articleTag");
+
+  document
+    .getElementsByName("articleTag")
+    [document.getElementsByName("articleTag").length - 1].insertAdjacentElement(
+      "afterend",
+      tagFieldToInsert
+    );
+});
