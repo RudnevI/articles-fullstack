@@ -82,3 +82,9 @@
             parent_id,
             name
            }
+- tag:
+    {
+        tag_name,
+        article_id
+    }
+    
