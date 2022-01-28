@@ -16,15 +16,108 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+    <script src="https://use.fontawesome.com/bde6c5313f.js"></script>
   </head>
   <body>
-    <div class="main-container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">ADMIN SERVICE</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                ARTICLE/COMMENT
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./article-list.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-article.html"
+                    >CREATE</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                CATEGORY
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./category-list.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-category.html"
+                    >CREATE</a
+                  >
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                TAGS
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./tags.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-tag.html">CREATE</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container mt-3">
       <table class="table">
         <thead>
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Имя</th>
             <th scope="col">Имя родителькой категории</th>
+            <th scrope="col"></th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -34,10 +127,48 @@
   <script>
     "use strict";
     const rootUrl = "http://127.0.0.1:8001";
+
+    const deleteIconHtml = `<i class="fa fa-trash" aria-hidden="true"></i>`;
+    const editIconHtml = `<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+    `;
+
     let buff;
     const fillCategoryTable = (fetchedData) => {
       if (fetchedData) {
         fetchedData.forEach((element) => {
+          let tdButtons = document.createElement("td");
+
+          let deleteButton = document.createElement("button");
+          deleteButton.classList.add("btn", "btn-danger");
+          deleteButton.innerHTML = deleteIconHtml;
+
+          let editButton = document.createElement("button");
+          editButton.classList.add("btn", "btn-success");
+          editButton.innerHTML = editIconHtml;
+
+          [editButton, deleteButton].forEach((btn) =>
+            tdButtons.appendChild(btn)
+          );
+
+          editButton.id = element.id;
+          deleteButton.id = element.id;
+
+          editButton.style.marginRight = "1vw";
+
+          editButton.addEventListener("click", function () {
+            location.replace(`./category-update.html?id=${this.id}`);
+          });
+
+          deleteButton.addEventListener("click", function () {
+            fetch(`${rootUrl}/categories/${this.id}`, {
+              method: "DELETE",
+            }).then((response) => {
+              if (response.ok) {
+                this.parentElement.parentElement.remove();
+              }
+            });
+          });
+
           let tr = document.createElement("tr");
           let tdId = document.createElement("td");
           let tdName = document.createElement("td");
@@ -46,13 +177,21 @@
           //   [tdId, tdName, tdParent].forEach(
           //     (td) => (td = document.createElement("td"))
           //   );
+
+          let parent = Array.from(fetchedData).filter(
+            (c) => element.parent_id === c.id
+          )[0];
+
+          console.log(parent);
           tdId.textContent = element.id;
           tdName.textContent = element.name;
           tdParent.textContent = element.parent_id
-            ? element.parent_id
+            ? parent.name
             : "отсутстсвует";
 
-          [tdId, tdName, tdParent].forEach((td) => tr.appendChild(td));
+          [tdId, tdName, tdParent, tdButtons].forEach((td) =>
+            tr.appendChild(td)
+          );
           document.querySelector("tbody").appendChild(tr);
         });
       }

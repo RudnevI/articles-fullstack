@@ -28,6 +28,8 @@
               <tr>
                 <th scope="col">id</th>
                 <th scope="col">name</th>
+
+                <th scope="col">Associated articles</th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -57,6 +59,7 @@
       tags.forEach((element) => {
         let tdId,
           tdName,
+          tdArticles,
           deleteButtonContainer,
           deleteButton,
           editButtonContainer,
@@ -64,6 +67,18 @@
 
         tdId = document.createElement("td");
         tdName = document.createElement("td");
+        tdArticles = document.createElement("td");
+
+        fetch(`${rootUrl}/articles/`)
+          .then((response) => response.json())
+          .then((data) => {
+            data
+              .filter((article) => element.article_id.includes(article.id))
+              .forEach(
+                (article) => (tdArticles.innerText += `${article.title}|`)
+              );
+          });
+
         deleteButtonContainer = document.createElement("td");
         deleteButton = document.createElement("button");
 
@@ -102,9 +117,13 @@
         let tr = document.createElement("tr");
         tdId.innerHTML = element.id;
         tdName.innerHTML = element.tag_name;
-        [tdId, tdName, deleteButtonContainer, editButtonContainer].forEach(
-          (td) => tr.appendChild(td)
-        );
+        [
+          tdId,
+          tdName,
+          tdArticles,
+          deleteButtonContainer,
+          editButtonContainer,
+        ].forEach((td) => tr.appendChild(td));
         console.log(tdId.innerHTML, tdName.innerHTML);
         table.appendChild(tr);
       });

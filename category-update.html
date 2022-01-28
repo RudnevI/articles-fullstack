@@ -18,24 +18,98 @@
     ></script>
   </head>
   <body>
-    <div class="main-container">
-      <div class="row mt-5">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-          <div class="form-text">Id категории:</div>
-          <input type="number" class="form-control" id="categoryId" />
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">ADMIN SERVICE</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                ARTICLE/COMMENT
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./article-list.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-article.html"
+                    >CREATE</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                CATEGORY
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./category-list.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-category.html"
+                    >CREATE</a
+                  >
+                </li>
+              </ul>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                TAGS
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./tags.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-tag.html">CREATE</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
         </div>
-        <div class="col-sm-4"></div>
       </div>
-      <div class="row mt-1">
-        <div class="col-sm-4"></div>
-        <div class="col-sm-4">
-          <button class="btn btn-primary" id="requestCategoryButton">
-            Запрос
-          </button>
-        </div>
-        <div class="col-sm-4"></div>
-      </div>
+    </nav>
+    <div class="container mt-3">
       <div class="row mt-5">
         <div class="col-sm-2"></div>
         <div class="col-sm-8">
@@ -69,20 +143,33 @@
   <script>
     "use strict";
     const rootUrl = "http://127.0.0.1:8001";
-    document
-      .querySelector("#requestCategoryButton")
-      .addEventListener("click", () => {
-        fetch(
-          `${rootUrl}/categories/${document.querySelector("#categoryId").value}`
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            document.querySelector("#name").value = data.name;
-            document.querySelector("#parentName").value = data.parent_id;
-          });
-      });
-    const getAllCategories = () => {
-      fetch(`${rootUrl}/categories/`)
+
+    const id = new URL(document.location.href).searchParams.get("id");
+
+    const fillPage = async () => {
+      await fetch(`${rootUrl}/categories/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.querySelector("#name").value = data.name;
+        });
+    };
+
+    const getCurrentCategory = async () => {
+      let currentCategory;
+      await fetch(`${rootUrl}/categories/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          currentCategory = data;
+        });
+      console.log(currentCategory);
+      return currentCategory;
+    };
+
+    fillPage();
+
+    const getAllCategories = async () => {
+      let currentCategory = await getCurrentCategory();
+      await fetch(`${rootUrl}/categories/`)
         .then((response) => response.json())
         .then((data) => {
           let select = document.querySelector("select");
@@ -91,6 +178,11 @@
             option.value = element.id;
             option.innerHTML = element.name;
             select.appendChild(option);
+            let parent = data.filter(
+              (category) => category.id === currentCategory.parent_id
+            )[0];
+
+            document.querySelector("#parentName").value = parent.id;
           });
         });
     };

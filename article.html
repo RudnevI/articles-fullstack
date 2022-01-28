@@ -6,37 +6,240 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Статья</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://use.fontawesome.com/bde6c5313f.js"></script>
     <style>
-      .comment-field-block {
-        width: 100%;
+      #title {
+        text-align: center;
+      }
+
+      .container {
+        height: 60vh !important;
+      }
+
+      #commentForm {
         position: fixed;
         bottom: 0;
-        display: flex;
-        flex-direction: column;
+        width: 80%;
+      }
+
+      #commentContent {
+        margin-top: 1vmin;
       }
     </style>
   </head>
   <body>
-    <div class="input-container">
-      <div>
-        <label for="articleId">Id статьи</label>
-        <input type="number" id="articleId" name="articleId" />
-      </div>
-      <button id="getArticleButton">Запрос статьи</button>
-      <button id="deleteArticleButton">Удалить статью</button>
-    </div>
-    <div class="error-container"></div>
-    <div class="main-container">
-      <div class="title"></div>
-      <div class="content"></div>
-      <div class="comment-section"></div>
-    </div>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">ADMIN SERVICE</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                ARTICLE/COMMENT
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./article-list.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-article.html"
+                    >CREATE</a
+                  >
+                </li>
+              </ul>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                CATEGORY
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./category-list.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-category.html"
+                    >CREATE</a
+                  >
+                </li>
+              </ul>
+            </li>
 
-    <div class="comment-field-block">
-      <input id="userName" type="text" />
-      <textarea class="comment-field"></textarea>
-      <button class="send-comment-button">Отправить комментарий</button>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="navbarDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                TAGS
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li>
+                  <a class="dropdown-item" href="./tags.html"
+                    >LIST/DELETE/UPDATE</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" href="./create-tag.html">CREATE</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container mt-3">
+      <div class="row">
+        <div class="col-sm-3"></div>
+        <div class="col-sm-6">
+          <h1 id="title"></h1>
+          <p id="content"></p>
+        </div>
+        <div class="col-sm-3"></div>
+      </div>
+    </div>
+    <hr />
+    <div class="container mt-2" id="commentSection"></div>
+
+    <div id="commentForm" class="border border-secondary">
+      <label>username</label>
+      <input type="text" id="userName" class="form-control" />
+      <textarea id="commentContent" class="form-control"></textarea>
+      <button class="btn btn-success" id="postCommentButton">Отправить</button>
     </div>
   </body>
-  <script src="scripts/fill-article-page.js"></script>
+  <script>
+    const rootUrl = "http://127.0.0.1:8001";
+
+    const id = new URL(document.location.href).searchParams.get("id");
+
+    const deleteIconHtml = `<i class="fa fa-trash" aria-hidden="true"></i>`;
+
+    const getArticle = () => {
+      fetch(`${rootUrl}/articles/${id}`)
+        .then((response) => response.json())
+        .then((data) => {
+          document.querySelector("#title").innerHTML = data.title;
+          document.querySelector("#content").innerHTML = data.content;
+        });
+    };
+
+    getArticle();
+
+    const createComment = (element) => {
+      let commentSection = document.querySelector("#commentSection");
+      let row = document.createElement("div");
+
+      let contentCol = document.createElement("div");
+      let buttonCol = document.createElement("div");
+
+      row.classList.add("row");
+
+      contentCol.classList.add("col-6");
+      buttonCol.classList.add("col-6");
+
+      let userName = element.user_name ?? "Anonymous";
+
+      contentCol.innerHTML = userName + ":" + element.content;
+
+      let deleteButton = document.createElement("button");
+      deleteButton.classList.add("btn", "btn-danger");
+      deleteButton.innerHTML = deleteIconHtml;
+      deleteButton.id = element.id;
+      deleteButton.addEventListener("click", function () {
+        fetch(`${rootUrl}/comments/${this.id}`, {
+          method: "DELETE",
+        }).then((response) => {
+          if (response.ok) {
+            this.parentElement.parentElement.remove();
+          }
+        });
+      });
+      buttonCol.appendChild(deleteButton);
+
+      row.append(contentCol, buttonCol);
+      commentSection.appendChild(row);
+    };
+
+    const getComments = () => {
+      let commentSection = document.querySelector("#commentSection");
+      fetch(`${rootUrl}/articles/${id}/comments`)
+        .then((response) => response.json())
+        .then((data) => {
+          data.forEach((element) => {
+            createComment(element);
+          });
+        });
+    };
+
+    getComments();
+
+    document
+      .querySelector("#postCommentButton")
+      .addEventListener("click", () => {
+        fetch(`${rootUrl}/articles/comments/`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_name: document.querySelector("#userName").value,
+            content: document.querySelector("#commentContent").value,
+            article: id,
+          }),
+        }).then((response) => {
+          if (response.ok) {
+            createComment({
+              user_name: document.querySelector("#userName").value,
+              content: document.querySelector("#commentContent").value,
+              id: id,
+            });
+          }
+        });
+      });
+  </script>
 </html>
